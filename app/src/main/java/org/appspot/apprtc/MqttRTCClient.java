@@ -125,7 +125,7 @@ public class MqttRTCClient implements AppRTCClient,MqttCallbackExtended
 
         try {
             Log.d("MQTT"," get Token clientId:" + clientid + " secret:" + secret + " Code:" + code) ;
-            String strUrl = "https://openapi-cn.wgine.com/v1.0/token?code=" + code + "&grant_type=2" ;
+            String strUrl = "https://openapi.tuyacn.com/v1.0/token?code=" + code + "&grant_type=2" ;
             URL url = new URL(strUrl);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setConnectTimeout(3000);
@@ -175,7 +175,7 @@ public class MqttRTCClient implements AppRTCClient,MqttCallbackExtended
      --header "t: {{timestamp}}"
 */
         try{
-            String strUrl = "https://openapi-cn.wgine.com/v1.0/devices/" + deviceid + "/camera-config?type=rtc" ;
+            String strUrl = "https://openapi.tuyacn.com/v1.0/devices/" + deviceid + "/camera-config?type=rtc" ;
             URL url = new URL(strUrl);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setConnectTimeout(30000);
@@ -228,7 +228,7 @@ public class MqttRTCClient implements AppRTCClient,MqttCallbackExtended
      --header "t: {{timestamp}}"
 */
         try {
-            String strUrl = "https://openapi-cn.wgine.com/v1.0/access/11/config" ;
+            String strUrl = "https://openapi.tuyacn.com/v1.0/access/11/config" ;
             URL url = new URL(strUrl);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setConnectTimeout(30000);
@@ -428,7 +428,8 @@ public class MqttRTCClient implements AppRTCClient,MqttCallbackExtended
                     jsonPut(header,"from",uid);
                     jsonPut(header,"to",_connectParameters.deviceid);
                     jsonPut(header,"type","offer");
-                    jsonPut(header,"moto_id","moto_pre_cn002");
+//                    jsonPut(header,"moto_id","moto_pre_cn002");
+                    jsonPut(header,"moto_id",_webrtcConfig.getJSONObject("configs").getString("moto_id"));
                     jsonPut(header,"sessionid",_sessionId);
 
                     jsonPut(data,"header",header);
@@ -452,7 +453,8 @@ public class MqttRTCClient implements AppRTCClient,MqttCallbackExtended
                     mqttMsg.setRetained(false);
                     mqttMsg.setPayload(jsonString.getBytes());
 
-                    String moto_topic = "/av/moto/moto_pre_cn002/u/" + _connectParameters.deviceid;
+//                    String moto_topic = "/av/moto/moto_pre_cn002/u/" + _connectParameters.deviceid;
+                    String moto_topic = "/av/moto/" + _webrtcConfig.getJSONObject("configs").getString("moto_id") + "/u/" + _connectParameters.deviceid;
                     Log.d("MQTT","====== send offer:" + jsonString);
                     _mqttAndroidClient.publish(moto_topic, mqttMsg, null, new IMqttActionListener() {
                         @Override
@@ -498,7 +500,8 @@ public class MqttRTCClient implements AppRTCClient,MqttCallbackExtended
                     jsonPut(header,"from",uid);
                     jsonPut(header,"to",_connectParameters.deviceid);
                     jsonPut(header,"type","candidate");
-                    jsonPut(header,"moto_id","moto_pre_cn002");
+//                    jsonPut(header,"moto_id","moto_pre_cn002");
+                    jsonPut(header,"moto_id",_webrtcConfig.getJSONObject("configs").getString("moto_id"));
                     jsonPut(header,"sessionid",_sessionId);
                     jsonPut(data,"header",header);
 
@@ -517,7 +520,8 @@ public class MqttRTCClient implements AppRTCClient,MqttCallbackExtended
                     mqttMsg.setRetained(false);
                     mqttMsg.setPayload(jsonString.getBytes());
 
-                    String moto_topic = "/av/moto/moto_pre_cn002/u/" + _connectParameters.deviceid;
+//                    String moto_topic = "/av/moto/moto_pre_cn002/u/" + _connectParameters.deviceid;
+                    String moto_topic = "/av/moto/" + _webrtcConfig.getJSONObject("configs").getString("moto_id") + "/u/" + _connectParameters.deviceid;
                     _mqttAndroidClient.publish(moto_topic, mqttMsg, null, new IMqttActionListener() {
                         @Override
                         public void onSuccess(IMqttToken asyncActionToken) {
